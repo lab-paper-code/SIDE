@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/x-icon" href="/static/images/dacs_favicon.ico">
+<!-- MAP leaflet js -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<!-- MAP leaflet draw plugin -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+<!-- basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<!-- site metas -->
+<title>SIDE: IoT Data Platform</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+<!-- bootstrap css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}" />
+<!-- Site css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" />
+<!-- responsive css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/responsive.css')}}" />
+<!-- colors css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/colors1.css')}}" />
+<!-- custom css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/custom.css')}}" />
+<!-- wow Animation css -->
+<link rel="stylesheet" href="{{url_for('static', filename='css/animate.css')}}" />
+</head>
+
+<body id="default_theme" class="it_service">
+<!-- header -->
+<header id="default_header" class="header_style_1">
+  <!-- header top -->
+  <div class="header_top">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="full">
+            <div class="topbar-left">
+              <ul class="list-inline">
+                <li> <span class="topbar-label"><i class="fa  fa-home"></i></span> <span class="topbar-hightlight"><a href="https://sites.google.com/view/knudeal">KNU DACS Lab</a></span> </li>
+                <li> <span class="topbar-label"><i class="fa fa-envelope-o"></i></span> <span class="topbar-hightlight"><a href="mailto:yksuh@knu.ac.kr">yksuh@knu.ac.kr</a></span> </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 right_section_header_top">
+          <div class="float-left">
+            <div class="social_icon">
+              <ul class="list-inline">
+                <li><a class="fa fa-facebook" href="https://www.facebook.com/" title="Facebook" target="_blank"></a></li>
+                <li><a class="fa fa-google-plus" href="https://plus.google.com/" title="Google+" target="_blank"></a></li>
+                <li><a class="fa fa-twitter" href="https://twitter.com" title="Twitter" target="_blank"></a></li>
+                <li><a class="fa fa-linkedin" href="https://www.linkedin.com" title="LinkedIn" target="_blank"></a></li>
+                <li><a class="fa fa-instagram" href="https://www.instagram.com" title="Instagram" target="_blank"></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="float-right">
+            <div class="make_appo"> <a class="btn white_btn">Make Appointment</a> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end header top -->
+  <!-- header bottom -->
+  <div class="header_bottom">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+          <!-- logo start -->
+          <div class="logo">     </div>
+          <!-- logo end -->
+        </div>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+          <!-- menu start -->
+          <div class="menu_side">
+            <div id="navbar_menu">
+              <ul class="first-ul">
+                <li> <a class="active" href="/">Home</a>
+                </li>
+                <li> <a href="/search/range">Search</a>
+                </li>
+                <!-- <li><a href="https://sites.google.com/view/knudeal/dacs-lab/people?authuser=0">About Us</a></li> -->
+              </ul>
+            </div>
+            <div class="search_icon">
+              <ul>
+                <li><a href="#" data-toggle="modal" data-target="#search_bar"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- menu end -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- header bottom end -->
+</header>
+    <main role="main">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

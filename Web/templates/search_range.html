@@ -1,0 +1,189 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+    /* 지도와 폼 스타일 */
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+    }
+
+    .map_wrap {
+        width: 100%;
+        position: relative;
+    }
+
+    #map {
+        width: 100%;
+        height: 550px;
+        margin-top: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container {
+        font-family: Arial, sans-serif;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .form-container h1 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .form-container input,
+    .form-container select {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        width: auto;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .form-container .datetime-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .form-container button {
+        padding: 10px 20px;
+        background-color: #0078d4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .form-container button:hover {
+        background-color: #005fa3;
+    }
+
+    .search-button-container {
+        text-align: right;
+    }
+
+    .side_bar_blog {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .side_bar_blog h4 {
+        color: #444;
+    }
+</style>
+
+
+<div class="section padding_layout_1">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="full">
+                    <div class="main_heading text_align_center">
+                        <h2>SpatioTemporal Range Query</h2>
+                        <p class="large">Define spatiotemporal range for IoT data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Side: Form and Map -->
+            <div class="col-md-9">
+                <div class="form-container">
+                    <form action="/result/range" method="post">
+                        <h1>Temporal Range Settings</h1>
+                        <div class="datetime-group">
+                            <div style="display: inline-block; margin-right: 25px;">
+                                <label>Start Datetime</label><br>
+                                <input type="date" name="start_date" lang="en">
+                                <select name="start_hour">
+                                    <option value="0">HH</option>
+                                    {% for t in range(24) %}
+                                    <option value="{{t}}">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                                <!-- <select name="start_min">
+                                    <option value="0">mm</option>
+                                    {% for t in range(60) %}
+                                    <option value="{{t}}">{{t}}</option>
+                                    {% endfor %}
+                                </select> -->
+                            </div>
+                            <div>
+                                <label>End Datetime</label><br>
+                                <input type="date" name="end_date">
+                                <select name="end_hour">
+                                    <option value="0">HH</option>
+                                    {% for t in range(24) %}
+                                    <option value="{{t}}">{{t}}</option>
+                                    {% endfor %}
+                                </select>
+                                <!-- <select name="end_min">
+                                    <option value="0">mm</option>
+                                    {% for t in range(60) %}
+                                    <option value="{{t}}">{{t}}</option>
+                                    {% endfor %}
+                                </select> -->
+                            </div>
+                        </div>
+
+                        <h1>Spatial Range Settings</h1>
+                        <input type="text" id="points" name="points" style="width: 370px;" placeholder="Coordinate range will appear here">
+                        <input type="button" onclick="getPoints();" value="Get coordinates">
+                        <br />
+                        <br />
+                        <h1>Diagram Type</h1>
+                        <select id="DiagramType" name="searchType">
+                            <option value="RECTANGLE" selected>RECTANGLE</option>
+                            <option value="CIRCLE">CIRCLE</option>
+                            <option value="POLYGON">POLYGON</option>
+                        </select>
+                        <div class="search-button-container">
+                            <button type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 지도 요소 -->
+                <div id="map"></div>
+            </div>
+
+            <!-- Right Side: Sidebar -->
+            <div class="col-md-3">
+                <div class="side_bar">
+                    <div class="side_bar_blog">
+                        <h4>Input Format</h4>
+                        <ul>
+                            <li>DATE HOUR (YYYY-MM-DD HH)</li>
+                            <li>(ex) 2024-03-04 09</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var country = "{{ country }}";
+</script>
+
+<!-- JavaScript map file load -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+{% endblock %}

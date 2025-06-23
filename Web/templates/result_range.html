@@ -1,0 +1,208 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+  }
+  .result-container {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  .back-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 15px;
+    background-color: #0078d4;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  .back-arrow:hover {
+    background-color: #005fa3;
+  }
+  .result-container h2 {
+    color: #333;
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+  .result-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .result-metrics h3 {
+    color: #555;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #f0f8ff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0;
+  }
+  .table-title {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
+    text-align: left;
+    border-bottom: 2px solid #0078d4;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+  .result-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .result-container th,
+  .result-container td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+  }
+  .result-container th {
+    background-color: #0078d4;
+    color: #fff;
+  }
+  #map {
+    width: 100%;
+    height: 500px;
+    margin-top: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+</style>
+
+<div class="section padding_layout_1">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="result-container">
+          <div class="result-header">
+            <a href="javascript:history.back()" class="back-arrow">← Back</a>
+            <h2>Spatiotemporal Query Result</h2>
+          </div>
+
+          {% if res and res['_id'] %}
+            <div class="result-metrics">
+              <h3>Total Rows Found: {{ res['_id']|length }}</h3>
+              <h3>Elapsed Time: {{ elapsed_time }} s</h3>
+            </div>
+
+            <div class="table-title">
+              First {{ res['_id']|length if res['_id']|length < 10 else 10 }} Rows
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>_id</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% set max_rows = res['_id']|length if res['_id']|length < 10 else 10 %}
+                {% for i in range(max_rows) %}
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ res['_id'][i] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          {% else %}
+            <h3>No data found for the given query.</h3>
+          {% endif %}
+        </div>
+
+        {% if raw_coords and raw_coords|length > 0 %}
+          <div id="map"></div>
+
+          <script
+            src="https://unpkg.com/leaflet/dist/leaflet.js"
+            crossorigin=""
+          ></script>
+
+          <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+              const rawCoords     = JSON.parse('{{ raw_coords     | tojson | safe }}');
+              const mapCoords     = JSON.parse('{{ coords          | tojson | safe }}');
+              const spatial_range = JSON.parse('{{ spatial_range  | tojson | safe }}');
+
+              const map = L.map('map').fitBounds([
+                [spatial_range[0], spatial_range[1]],
+                [spatial_range[2], spatial_range[3]]
+              ]);
+
+              L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                { attribution: '&copy; OpenStreetMap contributors' }
+              ).addTo(map);
+
+              rawCoords.forEach(pt => {
+                L.circleMarker([pt.lat, pt.lng], {
+                  radius:     4,
+                  color:      '#0078d4',
+                  fillColor:  '#0078d4',
+                  fillOpacity:0.6,
+                  weight:     1
+                }).addTo(map);
+              });
+
+              mapCoords.forEach(pt => {
+                L.circleMarker([pt.lat, pt.lng], {
+                  radius:     5,
+                  color:      '#ff0000',
+                  fillColor:  '#ff0000',
+                  fillOpacity:0.8,
+                  weight:     1
+                }).addTo(map);
+              });
+
+              L.rectangle([
+                [spatial_range[0], spatial_range[1]],
+                [spatial_range[2], spatial_range[3]]
+              ], {
+                color:      '#ff7800',
+                weight:     2,
+                fillOpacity:0.1
+              }).addTo(map);
+            });
+          </script>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
